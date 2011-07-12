@@ -3,17 +3,10 @@
  */
 package net.sf.rhinocanvas.rt;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextAction;
 import org.mozilla.javascript.Function;
-import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Script;
-import org.mozilla.javascript.tools.ToolErrorReporter;
-import org.mozilla.javascript.tools.shell.Main;
 
 class RhinoScriptRunner implements ContextAction, Runnable {
 

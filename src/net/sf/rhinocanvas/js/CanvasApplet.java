@@ -18,6 +18,8 @@ import net.sf.rhinocanvas.rt.RhinoRuntime;
 
 public class CanvasApplet extends JApplet {
 
+	private static final long serialVersionUID = 2537097612291669797L;
+
 	Frame window;
 	RhinoRuntime runtime;
 	String scriptUrl;

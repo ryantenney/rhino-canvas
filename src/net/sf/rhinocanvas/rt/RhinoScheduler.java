@@ -4,15 +4,9 @@
 package net.sf.rhinocanvas.rt;
 
 import java.awt.EventQueue;
-import java.io.PrintStream;
 
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextAction;
-import org.mozilla.javascript.RhinoException;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.tools.ToolErrorReporter;
-import org.mozilla.javascript.tools.shell.Main;
 
 class RhinoScheduler implements Runnable {
 	

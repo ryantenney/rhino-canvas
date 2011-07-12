@@ -2,7 +2,6 @@ package net.sf.rhinocanvas.js;
 
 import java.awt.Color;
 import java.awt.Paint;
-import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ class CanvasGradient {
 	
 	
 	
-	TreeMap stops = new TreeMap();
+	TreeMap<Float, String> stops = new TreeMap<Float, String>();
 	Paint paint;
 	
 	CanvasGradient(float x1, float y1, float r1, float x2, float y2, float r2){
@@ -52,7 +51,7 @@ class CanvasGradient {
 		
 		if(radial && r1 > 0){
 			if(stops.size() == 0 && where == 0){
-				stops.put(new Float(where), color);
+				stops.put(where, color);
 			}
 			where = where * r1/r2 + (1 - r1/r2);
 			
@@ -61,11 +60,11 @@ class CanvasGradient {
 		
 		
 		// todo: scale somehow with r1 and r2, so r1 can be omitted...
-		if(stops.get(new Float(where)) != null){
+		if(stops.get(where) != null){
 			where += where / 1000;
 		}
 		
-		stops.put(new Float(where), color);
+		stops.put(where, color);
 	}
 	
 	
@@ -75,10 +74,9 @@ class CanvasGradient {
 			Color[] color = new Color[stops.size()];
 
 			int i = 0;
-			for(Iterator iter = stops.entrySet().iterator(); iter.hasNext();){
-				Map.Entry e = (Map.Entry) iter.next();
-				where[i] = ((Float) e.getKey()).floatValue();
-				color[i] = new Color(new Value((String) e.getValue()).getColor(), true);
+			for(Map.Entry<Float, String> e : stops.entrySet()) {
+				where[i] = e.getKey();
+				color[i] = new Color(new Value(e.getValue()).getColor(), true);
 				i++;
 			}
 			

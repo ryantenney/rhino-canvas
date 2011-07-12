@@ -1,9 +1,7 @@
 package net.sf.rhinocanvas.rt;
 
 import java.io.PrintWriter;
-import java.io.Writer;
 
-import javax.swing.text.JTextComponent;
 
 public interface ScriptRuntime {
 	

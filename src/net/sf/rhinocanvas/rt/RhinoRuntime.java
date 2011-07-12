@@ -13,7 +13,7 @@ import org.mozilla.javascript.Scriptable;
 
 public class RhinoRuntime implements ScriptRuntime {
 
-	Hashtable intervals = new Hashtable();
+	Hashtable<Integer, RhinoScheduler> intervals = new Hashtable<Integer, RhinoScheduler>();
 	private int intervalId;
 
 	public int runNumber;
@@ -79,7 +79,7 @@ public class RhinoRuntime implements ScriptRuntime {
 			public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
 					// todo: allow function parameter instead of string (!!!)
 				RhinoScheduler e = new RhinoScheduler(RhinoRuntime.this, args[0], ((Number) args[1]).intValue(), true);
-				Integer id = new Integer(intervalId++);
+				Integer id = intervalId++;
 				intervals.put(id, e);
 				new Thread(e).start();
 				return id;
@@ -90,8 +90,8 @@ public class RhinoRuntime implements ScriptRuntime {
 
 			public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
 				// todo: allow function parameter instead of string (!!!)
-				Integer id = new Integer(((Number) args[0]).intValue());
-				RhinoScheduler e = (RhinoScheduler) intervals.get(id);
+				Integer id = ((Number) args[0]).intValue();
+				RhinoScheduler e = intervals.get(id);
 				e.loop = false;
 				intervals.remove(id);
 				return null;
@@ -142,7 +142,7 @@ public class RhinoRuntime implements ScriptRuntime {
 
 	public void stop() {
 		runNumber++;
-		intervals = new Hashtable();
+		intervals = new Hashtable<Integer, RhinoScheduler>();
 	}
 
 	public void setOutput(PrintWriter writer) {

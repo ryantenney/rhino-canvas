@@ -40,6 +40,8 @@ public class Frame extends Component {
 	
 	class Helper extends JPanel{
 		
+		private static final long serialVersionUID = 6769336384759405118L;
+
 		public void paint(java.awt.Graphics g){
 			// image may be transparent...
 			g.setColor(getBackground());

@@ -38,8 +38,8 @@ public class Component {
 			System.out.println("pressed Keycode: "+ke.getKeyCode()+" char: "+ke.getKeyChar());
 			if(onkeydown != null){
 				NativeObject no = new NativeObject();
-				ScriptableObject.putProperty(no, "which", new Double(ke.getKeyCode()));
-				ScriptableObject.putProperty(no, "keyCode", new Double(ke.getKeyCode()));
+				ScriptableObject.putProperty(no, "which", Double.valueOf(ke.getKeyCode()));
+				ScriptableObject.putProperty(no, "keyCode", Double.valueOf(ke.getKeyCode()));
 				
 				onkeydown.call(Context.enter(), onkeydown, onkeydown, new Object[]{no});
 				Context.exit();
@@ -51,8 +51,8 @@ public class Component {
 //				System.out.println("pressed Keycode: "+ke.getKeyCode()+" char: "+ke.getKeyChar());
 			if(onkeyup != null){
 				NativeObject no = new NativeObject();
-				ScriptableObject.putProperty(no, "which", new Double(ke.getKeyCode()));
-				ScriptableObject.putProperty(no, "keyCode", new Double(ke.getKeyCode()));
+				ScriptableObject.putProperty(no, "which", Double.valueOf(ke.getKeyCode()));
+				ScriptableObject.putProperty(no, "keyCode", Double.valueOf(ke.getKeyCode()));
 					
 				onkeyup.call(Context.enter(), onkeyup, onkeyup, new Object[]{no});
 			}
