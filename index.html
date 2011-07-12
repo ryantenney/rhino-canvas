@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Rhino Canvas</title> 
+<link rel="stylesheet" href="www/style.css"  type="text/css"/>
+</head>
+<body>
+
+<h1>Rhino Canvas <img src="www/img/rhino-small.png" /></h1>
+
+<h2>Rhino What?!</h2>
+
+<p>Rhino Canvas is an implementation of the 
+<a href="http://www.whatwg.org/specs/web-apps/current-work/#canvas">WHATWG 
+Canvas API</a> for the Rhino Javascript engine. The original purpose was to experiment 
+with <a href="www/drawstring.html#api">drawString()</a> implementations for the Canvas element, 
+in particular for a <a href="http://minijoe.com">J2ME implementation</a>. However, it may also be useful for some other stuff:</p>
+
+<ul> 
+<li>Do graphics in Javascript in a non-proprietary way</li>
+<li>Experiment with the Canvas API without needing a browser (and a dummy HTML page).</li>
+<li>Give kids something to play with that is not 
+   <a href="http://www.kidsprogramminglanguage.com/">tied to windows</a>.</li>
+<li>Support the Canvas API (for standalone applications such as games) in browsers that do not support 
+	the Canvas element (<a href="www/samples.html">Samples</a>).</li>
+</ul>
+
+<p>The project contains a minimal IDE that permits to conviniently edit and
+run Javascript applications.</p>
+
+<h2>Project News</h2>
+
+<dl>
+<dt>2006-12-07</dt>
+<dd>Applet implementation, <a href="www/samples.html">samples page</a> added.</dd>
+
+
+<dt>2006-11-19</dt>
+<dd>drawString() bugfixes, some more samples added, some code cleanup.</dd>
+
+<dt>2006-11-11</dt>
+<dd><a href="www/drawstring.html">drawString()</a>-support added. Used to replace document
+access in <a href="http://chris-malcolm.com/canvas/breakout.html">Chris Malcom's breakout sample</a>.</dd>
+</dl>
+
+<h2>Installation and Download</h2>
+
+<p>If you do not have a Java Runtime installed already, please download and install it from <a href="http://www.java.com/en/download/">http://www.java.com/en/download/</a></p>
+<ol>
+<li>Download and unzip the latest Rhino Canvas ZIP file (rhino-canvas-ide-&lt;version&gt;.zip) from the 
+<a href="http://sourceforge.net/project/showfiles.php?group_id=180977">Sourceforge 
+download page</a>.</li>
+<li>Start the IDE by double-clicking the .jar file in the extracted directory.</li>
+
+</ol>
+
+
+<p>The samples contained in the subdirectory <em>samples</em> can
+be opened and started directly from the IDE.</p>
+
+
+<center><img src="www/img/ide.png" /></center>
+
+<p>For the source code, please refer to the 
+<a href="http://sourceforge.net/cvs/?group_id=180977">sourceforge 
+CVS download instructions</a>. Rhino Canvas is licensed under the GPL.</p>
+
+
+<h2>Help!</h2>
+
+<p>There are several open issues:</p>
+
+<ul>
+<li>The logo could be improved</li>
+<li>The Rhino debugger needs to be integrated with the IDE</li>
+<li>A watchdog thread that is able to interrupt the interpreter is needed. All timer
+  based calls run in the AWT event handling queue to simplify graphics synchronization, 
+  so an infinite loop in a callback is fatal for the whole environment</li>
+</ul>
+
+<p>Any help is welcome! Please use the resources available at the <a href="http://sourceforge.net/projects/rhino-canvas/">Sourceforge project
+page</a>.</p>
+
+
+<h2>Components</h2>
+
+
+<p>Rhino Canvas takes advantage of several other open source projects:</p>
+<table width="100%"><tr><td><ul>
+<li><a href="http://www.mozilla.org/rhino/">Rhino Javascript Interpreter</a></li>
+<li><a href="http://xmlgraphics.apache.org/batik/">Batik AWT Extensions</a></li>
+<li><a href="http://ujac.sourceforge.net/">UJAC-UI Editor Component</a>
+<li>Examples from the great <a href="http://developer.mozilla.org/en/docs/Canvas_tutorial">Mozilla Canvas tutorial</a></li>
+</ul>
+</td>
+<td align="right"><a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=180977&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a></td></tr></table>
+
+<h2></h2>
+<p><small>Imprint: (c) 2006 <a href="http://stefan-haustein.com" style="color: #000;">Stefan Haustein</a>, Rolandstr. 27, 46045 Oberhausen, Germany</small></p>
+
+</body>

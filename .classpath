@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="toolsrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/js.jar"/>
+	<classpathentry kind="lib" path="lib/css4j-values.jar"/>
+	<classpathentry kind="lib" path="lib/apple-eawt-stub.jar"/>
+	<classpathentry kind="lib" path="lib/batik-ext-awt.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

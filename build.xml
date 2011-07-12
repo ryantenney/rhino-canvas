@@ -1,0 +1,85 @@
+<project name="rhino-canvas" basedir="." default="build" >
+
+  <property name="version" value="0.40" />	
+	
+  <target name="init">
+  	<delete dir="tmpclasses" />
+	<mkdir dir="dist"/>
+	<mkdir dir="tmpclasses"/>
+  </target>
+
+  <target name="unpack" >
+	 <unzip dest="tmpclasses" overwrite="true" src="lib/js.jar" />
+	 <unzip dest="tmpclasses" overwrite="true" src="lib/css4j-values.jar" />
+	 <unzip dest="tmpclasses" overwrite="true" src="lib/batik-ext-awt.jar" />
+  </target>
+	 	
+  <target name="build-applet" depends="init,unpack">
+      <javac srcdir="src"
+  	       destdir="tmpclasses"
+  	       includes="**/*.java"
+  		   source="1.3"
+  		   target="1.3">
+  	    </javac>
+
+  	 
+  	<jar jarfile="dist/rhino-canvas-applet.jar"
+         basedir="tmpclasses"
+  		excludes="org/mozilla/javascript/optimizer/*"
+    	manifest="toolsrc/META-INF/manifest.mf"
+     />
+     
+     <copy file="dist/rhino-canvas-applet.jar" todir="www" />
+
+  </target>
+	
+  <target name="build-ide" depends="build-applet">
+
+  	<javac srcdir="toolsrc" classpath="lib/apple-eawt-stub.jar"
+	  		
+	  	       destdir="tmpclasses"
+	  	       includes="**/*.java"
+	  		   source="1.3"
+	  		   target="1.3">
+	  	    </javac>
+	 	
+	 	<copy todir="tmpclasses" >
+	 		<fileset dir="toolsrc">
+	 		  <include name="**/*.png"/></fileset>
+	 		</copy>
+	 	    
+	<jar jarfile="dist/rhino-canvas-ide.jar"
+         basedir="tmpclasses"
+    	manifest="toolsrc/META-INF/manifest.mf"
+     />
+  </target>
+	
+	
+  <target name="package" depends="build-ide" >
+  	<mkdir dir="dist/rhino-canvas-${version}"/>
+  	<copydir dest="dist/rhino-canvas-${version}/samples" src="samples" excludes=".*">
+  	</copydir>
+  	<copy file="dist/rhino-canvas-ide.jar" todir="dist/rhino-canvas-${version}" />
+  	<copy file="dist/rhino-canvas-applet.jar" todir="dist/rhino-canvas-${version}" />
+  	 	
+    <echo append="false" file="dist/rhino-canvas-${version}/ide.cmd">java -jar rhino-canvas-ide.jar
+</echo>
+    <echo append="false" file="dist/rhino-canvas-${version}/ide.sh">java -jar rhino-canvas-ide.jar
+</echo>
+
+  	
+  	<zip destfile="dist/rhino-canvas-${version}.zip"> 
+		<fileset dir="dist" >
+			<include name="rhino-canvas-${version}/**" />
+		</fileset>
+		
+  	</zip>
+  
+  	<deltree dir="dist/rhino-canvas-ide-${version}"/> 
+  	
+  </target>
+	
+	
+  <target name="build" depends="package" />	
+	
+</project>
