@@ -16,37 +16,32 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
-
-
-public class Image  {
+public class Image {
 
 	Frame owner;
 	BufferedImage image;
 	String src;
 	Function onload;
 	boolean doNotify;
-	
-	public Image(){
-		
-	}
-	
-	public Image(int width, int height) {
-		
-    	image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-    	Graphics g = image.getGraphics();
-    	g.setColor(Color.WHITE);
-    	g.fillRect(0, 0, width, height);
-    
-    }
 
-	public void setSrc(String url){
+	public Image() {}
+
+	public Image(int width, int height) {
+		image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics g = image.getGraphics();
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, width, height);
+
+	}
+
+	public void setSrc(String url) {
 		this.src = url;
 		try {
 
 			RhinoRuntime runtime = (RhinoRuntime) Context.getCurrentContext().getThreadLocal("runtime");
 
 			Scriptable scope = runtime.getScope();
-			
+
 			String base = (String) scope.get("documentBase", scope);
 			try {
 				URI baseUri = new URI(base);
@@ -55,14 +50,14 @@ public class Image  {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			if(onload != null){
-				onload.call(Context.getCurrentContext(), onload, onload, new Object[0]);
-			}
-			else{
+
+			if (onload != null) {
+				onload.call(Context.getCurrentContext(), onload, onload,
+						new Object[0]);
+			} else {
 				doNotify = true;
 			}
-			
+
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -70,46 +65,41 @@ public class Image  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
-	
-	public void setOnload(Function onload){
+
+	public void setOnload(Function onload) {
 		this.onload = onload;
-		if(doNotify){
+		if (doNotify) {
 			doNotify = false;
-			onload.call(Context.getCurrentContext(), onload, onload, new Object[0]);
+			onload.call(Context.getCurrentContext(), onload, onload,
+					new Object[0]);
 		}
 	}
-	
-	public Function getOnload(){
+
+	public Function getOnload() {
 		return onload;
 	}
-	
-    public int getWidth(){
-    	return image.getWidth();
-    }
-	
-    public int getHeight(){
-    	return image.getHeight();
-    }
-	
-	
-    public CanvasRenderingContext2D getContext(String param){
-    	return new CanvasRenderingContext2D(this);
- 
-    }
 
-	 void dirty() {
-		if(owner != null){
+	public int getWidth() {
+		return image.getWidth();
+	}
+
+	public int getHeight() {
+		return image.getHeight();
+	}
+
+	public CanvasRenderingContext2D getContext(String param) {
+		return new CanvasRenderingContext2D(this);
+
+	}
+
+	void dirty() {
+		if (owner != null) {
 			owner.helper.repaint();
 		}
 	}
 
-
-//
-//	public String getClassName() {
-//		
-//		return "Image";
-//	}
+	// public String getClassName() {
+	// return "Image";
+	// }
 }

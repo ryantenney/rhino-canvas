@@ -1,4 +1,5 @@
 package net.sf.rhinocanvas.js;
+
 import java.awt.Paint;
 import java.awt.geom.AffineTransform;
 
@@ -19,9 +20,8 @@ public class ContextState {
 	private String lineCap;
 	private float miterLimit; // convert to rad?
 	private String globalCompositeOperation;
-	
-	
-	ContextState(CanvasRenderingContext2D ctx){
+
+	ContextState(CanvasRenderingContext2D ctx) {
 		transform = ctx.graphics.getTransform();
 		fillPaint = ctx.fillPaint;
 		fillStyle = ctx.fillStyle;
@@ -32,11 +32,10 @@ public class ContextState {
 		lineWidth = ctx.lineWidth;
 		lineJoin = ctx.lineJoin;
 		lineCap = ctx.lineCap;
-		miterLimit = ctx.miterLimit;		
+		miterLimit = ctx.miterLimit;
 	}
-	
-	
-	public void apply(CanvasRenderingContext2D ctx){
+
+	public void apply(CanvasRenderingContext2D ctx) {
 		ctx.graphics.setTransform(transform);
 		ctx.fillPaint = fillPaint;
 		ctx.fillStyle = fillStyle;

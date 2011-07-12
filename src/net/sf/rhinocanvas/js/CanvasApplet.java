@@ -1,6 +1,5 @@
 package net.sf.rhinocanvas.js;
 
-
 import java.io.BufferedReader;
 
 import java.io.InputStreamReader;
@@ -11,10 +10,7 @@ import java.net.URL;
 
 import javax.swing.JApplet;
 
-
 import net.sf.rhinocanvas.rt.RhinoRuntime;
-
-
 
 public class CanvasApplet extends JApplet {
 
@@ -23,11 +19,11 @@ public class CanvasApplet extends JApplet {
 	Frame window;
 	RhinoRuntime runtime;
 	String scriptUrl;
-	
-	public CanvasApplet(){
+
+	public CanvasApplet() {
 	}
 
-	public void init(){
+	public void init() {
 		runtime = new RhinoRuntime();
 		window = new Frame(this);
 		runtime.defineProperty("document", window);
@@ -40,29 +36,29 @@ public class CanvasApplet extends JApplet {
 		}
 		scriptUrl = base.resolve(getParameter("script")).toString();
 	}
-	
-	
-	public void start(){
-		
+
+	public void start() {
+
 		StringBuffer sb = new StringBuffer();
 		try {
 			runtime.setSource(scriptUrl);
 
-			BufferedReader r = new BufferedReader(new InputStreamReader(new URL(scriptUrl).openStream(), "UTF-8"));
-			
-			while(true){
+			BufferedReader r = new BufferedReader(new InputStreamReader(
+					new URL(scriptUrl).openStream(), "UTF-8"));
+
+			while (true) {
 				String line = r.readLine();
-				if(line == null) break;
+				if (line == null)
+					break;
 				sb.append(line);
 				sb.append('\n');
 			}
-			
+
 			runtime.exec(sb.toString());
-			
+
 		} catch (Exception e) {
-			
 			e.printStackTrace();
 		}
 	}
-	
+
 }
