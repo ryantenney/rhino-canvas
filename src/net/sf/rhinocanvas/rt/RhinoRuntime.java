@@ -92,6 +92,15 @@ public class RhinoRuntime implements ScriptRuntime {
 					return null;
 				}
 			});
+
+			defineProperty("print", new Callable() {
+				public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+					writer.println(args[0]);
+					writer.flush();
+					return null;
+				}
+			});
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
