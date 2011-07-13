@@ -1,7 +1,7 @@
 package net.sf.rhinocanvas.js;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -27,11 +27,10 @@ public class Image {
 	public Image() {}
 
 	public Image(int width, int height) {
-		image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics g = image.getGraphics();
+		this.image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D g = getGraphics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, width, height);
-
 	}
 
 	public void setSrc(String url) {
@@ -88,9 +87,12 @@ public class Image {
 		return image.getHeight();
 	}
 
+	Graphics2D getGraphics() {
+		return (Graphics2D) image.getGraphics();
+	}
+	
 	public CanvasRenderingContext2D getContext(String param) {
 		return new CanvasRenderingContext2D(this);
-
 	}
 
 	void dirty() {

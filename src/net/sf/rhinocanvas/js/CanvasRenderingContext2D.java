@@ -37,13 +37,17 @@ public class CanvasRenderingContext2D {
 
 	public CanvasTextStyle textStyle;
 
+	CanvasRenderingContext2D(Graphics2D graphics) {
+		this.graphics = graphics;
+		this.textStyle = new CanvasTextStyle(this);
+	}
+
 	CanvasRenderingContext2D(Image image) {
+		this(image.getGraphics());
 		this.image = image;
-		this.graphics = (Graphics2D) image.image.getGraphics();
-		graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+		this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		this.graphics.setPaint(Color.BLACK);
-		textStyle = new CanvasTextStyle(this);
 	}
 
 	// back-reference to the canvas
@@ -304,19 +308,19 @@ public class CanvasRenderingContext2D {
 		graphics.setPaint(Color.WHITE);
 		graphics.fill(new Rectangle2D.Double(x, y, w, h));
 		setGlobalAlpha(globalAlpha);
-		image.dirty();
+		dirty();
 	}
 
 	public void fillRect(double x, double y, double w, double h) {
 		graphics.setPaint(fillPaint);
 		graphics.fill(new Rectangle2D.Double(x, y, w, h));
-		image.dirty();
+		dirty();
 	}
 
 	public void strokeRect(float x, float y, float w, float h) {
 		graphics.setPaint(strokePaint);
 		graphics.draw(new Rectangle2D.Float(x, y, w, h));
-		image.dirty();
+		dirty();
 	}
 
 	// path API
@@ -425,7 +429,7 @@ public class CanvasRenderingContext2D {
 		graphics.setPaint(fillPaint);
 		graphics.fill(path);
 		graphics.setTransform(t);
-		image.dirty();
+		dirty();
 	}
 
 	public void stroke() {
@@ -440,7 +444,7 @@ public class CanvasRenderingContext2D {
 			e.printStackTrace();
 		}
 
-		image.dirty();
+		dirty();
 	}
 
 	public void clip() {
@@ -480,6 +484,12 @@ public class CanvasRenderingContext2D {
 
 		AffineTransform at = new AffineTransform(scaleX, 0, 0, scaleY, x0, y0);
 		g.drawImage(image.image, at, (ImageObserver) null);
+	}
+
+	void dirty() {
+		if (this.image != null) {
+			image.dirty();
+		}
 	}
 
 	// public void drawImage(HTMLImageElement image, float dx, float dy, float
