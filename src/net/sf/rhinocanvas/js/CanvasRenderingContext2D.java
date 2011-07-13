@@ -131,42 +131,6 @@ public class CanvasRenderingContext2D {
 
 	}
 
-	public void drawString(float x, float y, String s) {
-		// updateStroke();
-		graphics.setPaint(fillPaint);
-
-		FontMetrics metrics = textStyle.getMetrics();
-
-		String ta = textStyle.getTextAlign();
-		if ("center".equals(ta)) {
-			x = x - metrics.stringWidth(s) / 2;
-		} else if ("right".equals(ta)) {
-			x = x - metrics.stringWidth(s);
-		}
-
-		// baseline | sub | super | top | text-top | middle | bottom |
-		// text-bottom |)
-
-		y = y + metrics.getLeading() + metrics.getAscent();
-
-		String va = textStyle.getVerticalAlign();
-
-		if ("baseline".equals(va)) {
-			y = y - metrics.getLeading() + metrics.getAscent();
-		} else if ("text-top".equals(va)) {
-			y = y - metrics.getLeading();
-		} else if ("middle".equals(va)) {
-			y = y - metrics.getLeading() - metrics.getAscent() / 2;
-		} else if ("bottom".equals(va) || "text-bottom".equals(va)) {
-			y = y - metrics.getHeight();
-		}
-
-		if (textStyle != null) {
-			graphics.setFont(textStyle.getFont());
-		}
-		graphics.drawString(s, x, y);
-	}
-
 	public Object getFillStyle() {
 		return fillStyle;
 	}
@@ -488,7 +452,41 @@ public class CanvasRenderingContext2D {
 	}
 
 	public void fillText(String text, float x, float y) {
+		// updateStroke();
+		this.graphics.setPaint(fillPaint);
+
+		FontMetrics metrics = textStyle.getMetrics();
+
+		String ta = textStyle.getTextAlign();
+		if ("center".equals(ta)) {
+			x = x - metrics.stringWidth(text) / 2;
+		} else if ("right".equals(ta)) {
+			x = x - metrics.stringWidth(text);
+		}
+
+		// baseline | sub | super | top | text-top | middle | bottom |
+		// text-bottom |)
+
+		y = y + metrics.getLeading() + metrics.getAscent();
+
+		String va = textStyle.getVerticalAlign();
+
+		if ("baseline".equals(va)) {
+			y = y - metrics.getLeading() + metrics.getAscent();
+		} else if ("text-top".equals(va)) {
+			y = y - metrics.getLeading();
+		} else if ("middle".equals(va)) {
+			y = y - metrics.getLeading() - metrics.getAscent() / 2;
+		} else if ("bottom".equals(va) || "text-bottom".equals(va)) {
+			y = y - metrics.getHeight();
+		}
+
+		if (textStyle != null) {
+			this.graphics.setFont(textStyle.getFont());
+		}
+
 		this.graphics.drawString(text, x, y);
+
 		dirty();
 	}
 

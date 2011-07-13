@@ -96,7 +96,7 @@ function renderPlayarea()
    // playarea.textStyle.verticalAlign="top";
     playarea.fillStyle = "red";
   
- 	playarea.drawString(200, 0, ""+player_1_scr);
+ 	playarea.fillText(""+player_1_scr, 200, 0);
 
 	
 	//move paddles

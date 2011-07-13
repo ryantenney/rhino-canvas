@@ -187,16 +187,16 @@ function loadmap(){
     if(status == -1){
        ctx.textStyle.textAlign="center";
        ctx.textStyle.verticalAlign="bottom";
-       ctx.drawString(60,60, "Game Over.");
+       ctx.fillText("Game Over.", 60, 60);
       ctx.textStyle.verticalAlign="top";
-       ctx.drawString(60,60, "Press 's' to start");
+       ctx.fillText("Press 's' to start", 60, 60);
     }
     else if(balllaunched==false){
        ctx.textStyle.textAlign="center";
        ctx.textStyle.verticalAlign="bottom";
-       ctx.drawString(60,60, "Level: "+(level+1));
+       ctx.fillText("Level: "+(level+1), 60, 60);
        ctx.textStyle.verticalAlign="top";
-       ctx.drawString(60,60, "Press 'up' to launch");
+       ctx.fillText("Press 'up' to launch", 60, 60);
     }
 
   }
