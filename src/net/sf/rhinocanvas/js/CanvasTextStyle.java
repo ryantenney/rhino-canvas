@@ -14,7 +14,7 @@ public class CanvasTextStyle {
 	private String fontStyle = "plain";
 	private String fontVariant = "none";
 	private String fontWeight = "regular";
-	private String fontSize = "12pt";
+	private String fontSize = "10px";
 
 	private String textDecoration = "none";
 	private String verticalAlign = "baseline";
