@@ -487,6 +487,29 @@ public class CanvasRenderingContext2D {
 		g.drawImage(image.image, at, (ImageObserver) null);
 	}
 
+	public void fillText(String text, float x, float y) {
+		this.graphics.drawString(text, x, y);
+		dirty();
+	}
+
+	public void fillText(String text, float x, float y, float maxWidth) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void strokeText(String text, float x, float y) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void strokeText(String text, float x, float y, float maxWidth) {
+		throw new UnsupportedOperationException();
+	}
+
+	public CanvasTextMetrics measureText(String textToMeasure) {
+		FontMetrics metrics = this.textStyle.getMetrics();
+		Rectangle2D rect = metrics.getStringBounds(textToMeasure, graphics);
+		return new CanvasTextMetrics((float) rect.getWidth());
+	}
+
 	void dirty() {
 		if (this.image != null) {
 			image.dirty();
