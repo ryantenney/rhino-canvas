@@ -7,6 +7,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.GeneralPath;
@@ -452,9 +454,45 @@ public class CanvasRenderingContext2D {
 	}
 
 	public void fillText(String text, float x, float y) {
-		// updateStroke();
-		this.graphics.setPaint(fillPaint);
+		updateTextStyle();
 
+		graphics.setPaint(fillPaint);
+		graphics.fill(textShape(text, x, y));
+
+		dirty();
+	}
+
+	public void fillText(String text, float x, float y, float maxWidth) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void strokeText(String text, float x, float y) {
+		updateTextStyle();
+
+		graphics.setPaint(strokePaint);
+		graphics.draw(textShape(text, x, y));
+
+		dirty();
+	}
+	
+	public void strokeText(String text, float x, float y, float maxWidth) {
+		throw new UnsupportedOperationException();
+	}
+
+	public CanvasTextMetrics measureText(String textToMeasure) {
+		FontMetrics metrics = this.textStyle.getMetrics();
+		Rectangle2D rect = metrics.getStringBounds(textToMeasure, graphics);
+		return new CanvasTextMetrics((float) rect.getWidth());
+	}
+
+	Shape textShape(String text, float x, float y) {
+		TextLayout layout = new TextLayout(text, textStyle.getFont(), graphics.getFontRenderContext());
+		Point2D.Float pos = calcTextPos(text, x, y);
+		AffineTransform transform = AffineTransform.getTranslateInstance(pos.x, pos.y);
+		return layout.getOutline(transform);
+	}
+
+	Point2D.Float calcTextPos(String text, float x, float y) {
 		FontMetrics metrics = textStyle.getMetrics();
 
 		String ta = textStyle.getTextAlign();
@@ -481,31 +519,13 @@ public class CanvasRenderingContext2D {
 			y = y - metrics.getHeight();
 		}
 
+		return new Point2D.Float(x, y);
+	}
+
+	void updateTextStyle() {
 		if (textStyle != null) {
-			this.graphics.setFont(textStyle.getFont());
+			graphics.setFont(textStyle.getFont());
 		}
-
-		this.graphics.drawString(text, x, y);
-
-		dirty();
-	}
-
-	public void fillText(String text, float x, float y, float maxWidth) {
-		throw new UnsupportedOperationException();
-	}
-
-	public void strokeText(String text, float x, float y) {
-		throw new UnsupportedOperationException();
-	}
-
-	public void strokeText(String text, float x, float y, float maxWidth) {
-		throw new UnsupportedOperationException();
-	}
-
-	public CanvasTextMetrics measureText(String textToMeasure) {
-		FontMetrics metrics = this.textStyle.getMetrics();
-		Rectangle2D rect = metrics.getStringBounds(textToMeasure, graphics);
-		return new CanvasTextMetrics((float) rect.getWidth());
 	}
 
 	void dirty() {
