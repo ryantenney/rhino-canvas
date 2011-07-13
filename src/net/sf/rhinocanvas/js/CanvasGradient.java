@@ -10,7 +10,7 @@ import net.sf.css4j.Value;
 import org.apache.batik.ext.awt.LinearGradientPaint;
 import org.apache.batik.ext.awt.RadialGradientPaint;
 
-class CanvasGradient {
+public class CanvasGradient {
 
 	boolean radial;
 	float x1;
