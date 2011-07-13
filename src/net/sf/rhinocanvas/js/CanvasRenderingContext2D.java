@@ -360,7 +360,8 @@ public class CanvasRenderingContext2D {
 	}
 
 	public void arcTo(float x1, float y1, float x2, float y2, float radius) {
-		System.out.println("arcTo Not Yet implemented...");
+		// System.out.println("arcTo Not Yet implemented...");
+		throw new RuntimeException("arcTo Not Yet implemented...");
 	}
 
 	public void rect(float x, float y, float w, float h) {

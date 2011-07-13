@@ -49,7 +49,7 @@ class CanvasGradient {
 			}
 			where = where * r1 / r2 + (1 - r1 / r2);
 
-			System.out.println("where: " + where + " r1: " + r1 + " r2:" + r2);
+			// System.out.println("where: " + where + " r1: " + r1 + " r2:" + r2);
 		}
 
 		// todo: scale somehow with r1 and r2, so r1 can be omitted...

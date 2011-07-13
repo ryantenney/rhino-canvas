@@ -33,7 +33,7 @@ public class Component {
 		}
 
 		public void keyPressed(KeyEvent ke) {
-			System.out.println("pressed Keycode: " + ke.getKeyCode() + " char: " + ke.getKeyChar());
+			// System.out.println("pressed Keycode: " + ke.getKeyCode() + " char: " + ke.getKeyChar());
 			if (onkeydown != null) {
 				NativeObject no = new NativeObject();
 				ScriptableObject.putProperty(no, "which", Double.valueOf(ke.getKeyCode()));

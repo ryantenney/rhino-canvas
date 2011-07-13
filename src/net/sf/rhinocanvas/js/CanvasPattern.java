@@ -11,7 +11,8 @@ public class CanvasPattern {
 	CanvasPattern(Image image, String repetition) {
 
 		if(!"repeat".equals(repetition)){
-			System.out.println("Currently unsupported CanvasPattern repetition: "+repetition);
+			// System.out.println("Currently unsupported CanvasPattern repetition: "+repetition);
+			throw new RuntimeException("Currently unsupported CanvasPattern repetition: " + repetition);
 		}
 		
 		Rectangle2D rect = new Rectangle2D.Float(0, 0, 
