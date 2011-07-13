@@ -3,27 +3,34 @@
  */
 package net.sf.rhinocanvas.ide;
 
+import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.geom.AffineTransform;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-
 import javax.swing.JFileChooser;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.filechooser.FileFilter;
 
 import net.sf.rhinocanvas.js.Image;
 import net.sf.rhinocanvas.rt.RhinoRuntime;
 
 import org.ujac.ui.editor.TextArea;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfWriter;
 
 
 
@@ -230,6 +237,75 @@ public class Tab extends JSplitPane {
 	}
 
 
+	public boolean actionSavePDF(){
+		JFileChooser fileChooser = new JFileChooser();
+
+		fileChooser.setFileFilter(new FileFilter() {
+
+			public boolean accept(File f) {
+				return f.isDirectory() || f.getName().toLowerCase().endsWith(".pdf");
+			}
+
+			public String getDescription() {
+				return "PDF file";
+			}
+			
+		});
+
+		fileChooser.setDialogTitle("Save PDF");
+        int returnVal = fileChooser.showSaveDialog(this);
+        if(returnVal != JFileChooser.APPROVE_OPTION) {
+        	return false;
+        }
+        	
+        File file = fileChooser.getSelectedFile();
+            
+        this.file = file;
+
+		try {
+			float SCALE = 0.24f;
+			FileOutputStream fos = new FileOutputStream(file);
+
+			Rectangle rect = new Rectangle(612, 792);
+			Document document = new Document(rect);
+			PdfWriter w = PdfWriter.getInstance(document, fos);
+			w.setStrictImageSequence(true);
+
+			document.open();
+
+			document.addTitle("Test Render");
+			document.addSubject("Using rhino-canvas to iText");
+			document.addKeywords("Java, PDF, iText");
+			document.addAuthor("Ryan Tenney");
+			document.addCreator("Ryan Tenney");
+
+			PdfContentByte cb = w.getDirectContent();
+
+			cb.saveState();
+			cb.concatCTM(AffineTransform.getScaleInstance(SCALE, SCALE));
+
+			Graphics2D g = cb.createGraphics(612f / SCALE, 792f / SCALE);
+
+			runtime.defineProperty("document", new net.sf.rhinocanvas.js.Frame(g));
+
+			runtime.stop(); // inc run number
+			runtime.exec(editor.getText());
+
+			g.dispose();
+
+			cb.restoreState();
+			System.out.println("Done writing PDF");
+
+			document.close();
+			fos.flush();
+			fos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+        
+        return true;
+	}
 	
 	
 	

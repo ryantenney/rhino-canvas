@@ -175,6 +175,7 @@ public class IDE extends JFrame {
 		fileMenu.add(new ReflectiveAction("Save", "actionSave")
 			.setMnemonic(KeyEvent.VK_S).setAccelerator("S"));
 		fileMenu.add(new ReflectiveAction("Save as...", "actionSaveAs").setMnemonic(KeyEvent.VK_A));
+		fileMenu.add(new ReflectiveAction("Save PDF...", "actionSavePDF").setMnemonic(KeyEvent.VK_P));
 		
 		if(!macOS){
 			fileMenu.add(new ReflectiveAction("Quit", "actionExit").setMnemonic('Q'));
