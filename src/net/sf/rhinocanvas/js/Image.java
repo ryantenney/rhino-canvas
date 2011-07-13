@@ -97,7 +97,7 @@ public class Image {
 
 	void dirty() {
 		if (owner != null) {
-			owner.helper.repaint();
+			owner.dirty();
 		}
 	}
 

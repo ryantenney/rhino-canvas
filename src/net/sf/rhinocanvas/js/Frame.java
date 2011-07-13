@@ -3,6 +3,7 @@ package net.sf.rhinocanvas.js;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -105,6 +106,17 @@ public class Frame extends Component {
 		this.applet = applet;
 	}
 
+	public Frame(final Graphics2D g) {
+		Image i = new Image() {
+			@Override
+			Graphics2D getGraphics() {
+				return g;
+			}	
+		};
+
+		setContent(i);
+	}
+
 	public Frame(String title, Object content) {
 		this(new JFrame(title), content);
 
@@ -126,7 +138,9 @@ public class Frame extends Component {
 	}
 
 	void dirty() {
-		helper.repaint();
+		if (helper != null) {
+			helper.repaint();
+		}
 	}
 
 	public void setResizable(boolean rs) {
