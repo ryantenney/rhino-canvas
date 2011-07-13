@@ -33,7 +33,7 @@ public class CanvasRenderingContext2D {
 	float lineWidth = 1.0f;
 	String lineJoin = "miter";
 	String lineCap = "butt";
-	float miterLimit = 11.0f; // convert to rad?
+	float miterLimit = 10.0f; // convert to rad?
 
 	public CanvasTextStyle textStyle;
 
