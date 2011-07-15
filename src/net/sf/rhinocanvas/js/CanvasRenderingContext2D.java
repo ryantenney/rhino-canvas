@@ -3,6 +3,7 @@ package net.sf.rhinocanvas.js;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -17,6 +18,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import net.sf.css4j.Value;
 
@@ -37,11 +41,16 @@ public class CanvasRenderingContext2D {
 	String lineCap = "butt";
 	float miterLimit = 10.0f; // convert to rad?
 
-	public CanvasTextStyle textStyle;
+	String fontStr = "10px sans-serif";
+	Font font = parseFont(fontStr);
+	String textAlign = "start";
+	String textBaseline = "alphabetic";
+	
+	// 'left', 'start', 'center', 'right', 'end'
+	// 'alphabetic', 'top', 'bottom', 'middle', 'ideographic', 'hanging'
 
 	CanvasRenderingContext2D(Graphics2D graphics) {
 		this.graphics = graphics;
-		this.textStyle = new CanvasTextStyle(this);
 	}
 
 	CanvasRenderingContext2D(Image image) {
@@ -133,6 +142,31 @@ public class CanvasRenderingContext2D {
 
 	}
 
+	public String getFont() {
+		return this.fontStr;
+	}
+
+	public void setFont(String font) {
+		this.fontStr = font;
+		this.font = parseFont(font);
+	}
+
+	public String getTextAlign() {
+		return this.textAlign;
+	}
+
+	public void setTextAlign(String value) {
+		this.textAlign = value;
+	}
+
+	public String getTextBaseline() {
+		return this.textBaseline;
+	}
+
+	public void setTextBaseline(String value) {
+		this.textBaseline = value;
+	}
+
 	public Object getFillStyle() {
 		return fillStyle;
 	}
@@ -179,15 +213,6 @@ public class CanvasRenderingContext2D {
 
 	public CanvasPattern createPattern(Image image, String repetition) {
 		return new CanvasPattern(image, repetition);
-	}
-
-	public CanvasTextStyle createTextStyle() {
-		return new CanvasTextStyle(this);
-	}
-
-	public CanvasTextStyle createTextStyle(String attrs, String size,
-			String family) {
-		return new CanvasTextStyle(this, attrs, size, family);
 	}
 
 	// CanvasPattern createPattern(HTMLCanvasElement image, DOMString
@@ -454,8 +479,7 @@ public class CanvasRenderingContext2D {
 	}
 
 	public void fillText(String text, float x, float y) {
-		updateTextStyle();
-
+		graphics.setFont(font);
 		graphics.setPaint(fillPaint);
 		graphics.fill(textShape(text, x, y));
 
@@ -467,8 +491,7 @@ public class CanvasRenderingContext2D {
 	}
 
 	public void strokeText(String text, float x, float y) {
-		updateTextStyle();
-
+		graphics.setFont(font);
 		graphics.setPaint(strokePaint);
 		graphics.draw(textShape(text, x, y));
 
@@ -480,56 +503,132 @@ public class CanvasRenderingContext2D {
 	}
 
 	public CanvasTextMetrics measureText(String textToMeasure) {
-		FontMetrics metrics = this.textStyle.getMetrics();
+		FontMetrics metrics = graphics.getFontMetrics(font);
 		Rectangle2D rect = metrics.getStringBounds(textToMeasure, graphics);
 		return new CanvasTextMetrics((float) rect.getWidth());
 	}
 
 	Shape textShape(String text, float x, float y) {
-		TextLayout layout = new TextLayout(text, textStyle.getFont(), graphics.getFontRenderContext());
+		TextLayout layout = new TextLayout(text, font, graphics.getFontRenderContext());
 		Point2D.Float pos = calcTextPos(text, x, y);
 		AffineTransform transform = AffineTransform.getTranslateInstance(pos.x, pos.y);
 		return layout.getOutline(transform);
 	}
 
 	Point2D.Float calcTextPos(String text, float x, float y) {
-		FontMetrics metrics = textStyle.getMetrics();
+		FontMetrics metrics = graphics.getFontMetrics(font);
 
-		String ta = textStyle.getTextAlign();
-		if ("center".equals(ta)) {
+		if ("center".equals(textAlign)) {
 			x = x - metrics.stringWidth(text) / 2;
-		} else if ("right".equals(ta)) {
+		} else if ("right".equals(textAlign)) {
 			x = x - metrics.stringWidth(text);
 		}
 
-		// baseline | sub | super | top | text-top | middle | bottom |
-		// text-bottom |)
-
 		y = y + metrics.getLeading() + metrics.getAscent();
 
-		String va = textStyle.getVerticalAlign();
-
-		if ("baseline".equals(va)) {
+		if ("alphabetic".equals(textBaseline)) {
 			y = y - metrics.getLeading() + metrics.getAscent();
-		} else if ("text-top".equals(va)) {
+		} else if ("top".equals(textBaseline)) {
 			y = y - metrics.getLeading();
-		} else if ("middle".equals(va)) {
+		} else if ("middle".equals(textBaseline)) {
 			y = y - metrics.getLeading() - metrics.getAscent() / 2;
-		} else if ("bottom".equals(va) || "text-bottom".equals(va)) {
+		} else if ("bottom".equals(textBaseline)) {
 			y = y - metrics.getHeight();
 		}
 
 		return new Point2D.Float(x, y);
 	}
 
-	void updateTextStyle() {
-		if (textStyle != null) {
-			graphics.setFont(textStyle.getFont());
+	private static final String
+			weights = "normal|bold|bolder|lighter|[1-9]00",
+			styles = "normal|italic|oblique",
+			units = "px|pt|pc|in|cm|mm|%",
+			string = "'([^']+)'|\"([^\"]+)\"|[\\w-]+";
+
+	private static final String fontre =
+			"^ *" +
+			"(?:(" + weights + ") *)?" +
+			"(?:(" + styles + ") *)?" +
+			"([\\d\\.]+)(" + units + ") *" +
+			"((?:" + string + ")( *, *(?:" + string + "))*)";
+
+	private static final Pattern fontPattern;
+
+	static {
+		try {
+			fontPattern = Pattern.compile(fontre);
+		} catch (PatternSyntaxException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
+	/**
+	 * Parse font `str`.
+	 *
+	 * @param String str
+	 */
+	private Font parseFont(String str) {
+		Matcher m = fontPattern.matcher(str);
+
+		if (!m.find()) {
+			return null;
+		}
+
+		String weight = m.group(1);
+		String style = m.group(2);
+		float size = Float.parseFloat(ifNull(m.group(3), "10"));
+		String unit = ifNull(m.group(4), "px");
+		String name = ifNull(m.group(5), "sans-serif");
+
+		if ("sans-serif".equals(name)) {
+			name = "SansSerif";
+		}
+
+		int fontSize = (int) convertUnitToPts(size, unit);
+		int fontStyle = 0;
+
+		if ("bold".equals(weight)) {
+			fontStyle |= Font.BOLD;
+		}
+
+		if ("oblique".equals(style) || "italic".equals(style)) {
+			fontStyle |= Font.ITALIC;
+		}
+
+		return new Font(name, fontStyle, fontSize);
+	}
+
+	private static final <T> T ifNull(T arg1, T arg2) {
+		return arg1 != null ? arg1 : arg2;
+	}
+
+	/**
+	 * Convert to mm then to pt
+	 * @param val
+	 * @param srcUnit
+	 * @return
+	 */
+	private float convertUnitToPts(float val, String srcUnit) {
+		if ("px".equals(srcUnit)) {
+			val *= 0.26f;
+		} else if ("in".equals(srcUnit)) {
+			val *= 25.4f;
+		} else if ("cm".equals(srcUnit)) {
+			val *= 10.0f;
+		} else if ("pt".equals(srcUnit)) {
+			val *= 25.4f / 72.0f;
+		} else if ("pc".equals(srcUnit)) {
+			val *= 25.4f / 6.0f;
+		} else if ("mm".equals(srcUnit)) {
+			// noop
+		} else {
+			val *= 4.0f * 25.4f / 72.0f;
+		}
+		return 72.0f * val / 25.4f;
+	}
+
 	void dirty() {
-		if (this.image != null) {
+		if (image != null) {
 			image.dirty();
 		}
 	}
