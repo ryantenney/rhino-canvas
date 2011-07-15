@@ -263,28 +263,26 @@ public class Tab extends JSplitPane {
         this.file = file;
 
 		try {
-			float SCALE = 0.24f;
+			float SCALE = 1.0f;
+			Rectangle SIZE = new Rectangle(612f, 792f);
+
 			FileOutputStream fos = new FileOutputStream(file);
 
-			Rectangle rect = new Rectangle(612, 792);
-			Document document = new Document(rect);
+			Document document = new Document(SIZE);
 			PdfWriter w = PdfWriter.getInstance(document, fos);
-			w.setStrictImageSequence(true);
 
 			document.open();
 
-			document.addTitle("Test Render");
+			document.addTitle("Canvas-to-PDF Render");
 			document.addSubject("Using rhino-canvas to iText");
 			document.addKeywords("Java, PDF, iText");
-			document.addAuthor("Ryan Tenney");
-			document.addCreator("Ryan Tenney");
 
 			PdfContentByte cb = w.getDirectContent();
 
 			cb.saveState();
 			cb.concatCTM(AffineTransform.getScaleInstance(SCALE, SCALE));
 
-			Graphics2D g = cb.createGraphics(612f / SCALE, 792f / SCALE);
+			Graphics2D g = cb.createGraphics(SIZE.getWidth() / SCALE, SIZE.getHeight() / SCALE);
 
 			runtime.defineProperty("document", new net.sf.rhinocanvas.js.Frame(g));
 
@@ -294,7 +292,6 @@ public class Tab extends JSplitPane {
 			g.dispose();
 
 			cb.restoreState();
-			System.out.println("Done writing PDF");
 
 			document.close();
 			fos.flush();
